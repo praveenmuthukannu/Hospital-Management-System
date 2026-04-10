@@ -13,7 +13,7 @@ public class User {
     private String name;
     private String email;
     private String password;
-    @Enumerated(EnumType.STRING) // Maps to ENUM('patient', 'doctor', 'admin')
+    @Enumerated(EnumType.STRING) 
     private UserRole role;
     private String phone;
     
