@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Appointments</title>
+    <style>
+        body { font-family: Arial; background: #f4f7fb; }
+        .container { width: 90%; margin: 40px auto; }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th { background: #2c3e50; color: white; }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .scheduled { background: orange; }
+        .completed { background: green; }
+        .cancelled { background: red; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>All Appointments</h2>
+
+    <table>
+        <tr>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Date</th>
+			<th>reason</th>
+            <th>Status</th>
+        </tr>
+
+		<tbody>
+		            <tr th:each="appt : ${allAppts}">
+		                <td th:text="${appt.patientName}">Patient Name</td>
+		                <td th:text="${appt.doctorName}">Doctor Name</td>
+		                <td th:text="${appt.date}">Date</td>
+						<td th:text="${appt.reason}">reason</td>
+		                <td>
+		                    <span th:class="'status ' + ${appt.status}" 
+		                          th:text="${appt.status}">Status</span>
+		                </td>
+		            </tr>
+		        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

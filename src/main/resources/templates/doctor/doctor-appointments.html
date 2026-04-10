@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Appointments</title>
+    <style>
+        body { margin: 0; font-family: Arial; background: #f4f7fb; }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            background: #2c3e50;
+            color: white;
+            position: fixed;
+            padding-top: 20px;
+        }
+
+        .sidebar h2 { text-align: center; }
+
+        .sidebar a {
+            display: block;
+            padding: 12px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover { background: #34495e; }
+
+        /* Main */
+        .main {
+            margin-left: 220px;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #2c3e50;
+            color: white;
+        }
+
+        select {
+            padding: 5px;
+        }
+
+        button {
+            padding: 6px 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button:hover { background: #2980b9; }
+		
+		.btn-attend {
+		    background-color: #3498db; /* Professional blue */
+		    color: white;
+		    border: none;
+		    padding: 6px 12px;
+		    border-radius: 4px;
+		    cursor: pointer;
+		    font-size: 14px;
+		    transition: background-color 0.3s;
+		}
+
+		.btn-attend:hover {
+		    background-color: #2980b9;
+		}
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>Doctor</h2>
+    <a href="/api/doctor/dashboard">Dashboard</a>
+    <a href="/api/doctor/my-appointments">My Appointments</a>
+    <a href="/api/auth/login">Logout</a>
+</div>
+
+<div class="main">
+    <h2>My Appointments</h2>
+
+	<table>
+	        <tr>
+	            <th>Patient Name</th>
+	            <th>Date</th>
+	            <th>Time</th>
+	            <th>Reason</th>
+	            <th>Status</th>
+	            <th>Action</th>
+	        </tr>
+	        <tr th:each="appt : ${listAppointment}">
+	            <td th:text="${appt.patientname}">Patient Name</td>
+				 <td th:text="${appt.date}">Date</td>
+	            <td th:text="${appt.time}">Time</td>
+	            <td th:text="${appt.reason}">Reason</td>
+	            <td>
+	                <span th:class="'status ' + ${#strings.toLowerCase(appt.status)}" 
+	                      th:text="${appt.status}">Status</span>
+	            </td>
+	            
+				<td>
+				    <div th:if="${appt.status == 'scheduled'}">
+				        <form th:action="@{/api/appointment/update-status}" method="post" style="display: inline;">
+				            <input type="hidden" name="id" th:value="${appt.id}" />
+				            <input type="hidden" name="status" value="completed" />
+				            <button type="submit" class="btn-attend">Mark Completed</button>
+				        </form>
+				    </div>
+				    
+				    <span th:if="${appt.status == 'completed'}" class="status-text">Done</span>
+				</td>
+	        </tr>
+	    </table>
+</div>
+
+</body>
+</html>

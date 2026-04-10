@@ -1,0 +1,18 @@
+package com.example.hospital.hospitalRepository;
+
+
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+
+import com.example.hospital.Entity.Patient;
+
+public interface PatientRepository extends JpaRepository<Patient, Long> {
+
+
+	Optional<Patient> findByUserId(Long userId);
+
+	
+}

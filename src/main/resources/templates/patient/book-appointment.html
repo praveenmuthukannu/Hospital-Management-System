@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Appointment</title>
+	  <style>
+	        /* General Page Styling */
+	body {
+	    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	    background-color: #f4f7f6;
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	    min-height: 100vh;
+	    margin: 0;
+	}
+
+	/* Form Container */
+	.appointment-container {
+	    background: #ffffff;
+	    padding: 30px;
+	    border-radius: 12px;
+	    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+	    width: 100%;
+	    max-width: 500px;
+	}
+
+	h2 {
+	    text-align: center;
+	    color: #2c3e50;
+	    margin-bottom: 25px;
+	}
+
+	/* Individual Form Groups */
+	.form-group {
+	    margin-bottom: 15px;
+	}
+
+	label {
+	    display: block;
+	    font-weight: 600;
+	    margin-bottom: 5px;
+	    color: #34495e;
+	}
+
+	/* Inputs, Selects, and Textareas */
+	input[type="text"],
+	input[type="date"],
+	input[type="time"],
+	select,
+	textarea {
+	    width: 100%;
+	    padding: 12px;
+	    border: 1px solid #dcdfe6;
+	    border-radius: 6px;
+	    box-sizing: border-box; /* Ensures padding doesn't break width */
+	    font-size: 14px;
+	    transition: border-color 0.3s;
+	}
+
+	input:focus,
+	select:focus,
+	textarea:focus {
+	    outline: none;
+	    border-color: #3498db;
+	    background-color: #f9fbff;
+	}
+
+	textarea {
+	    resize: vertical;
+	    min-height: 80px;
+	}
+
+	/* Submit Button */
+	.submit-btn {
+	    width: 100%;
+	    background-color: #3498db;
+	    color: white;
+	    padding: 14px;
+	    border: none;
+	    border-radius: 6px;
+	    font-size: 16px;
+	    font-weight: bold;
+	    cursor: pointer;
+	    transition: background-color 0.3s ease;
+	    margin-top: 10px;
+	}
+
+	.submit-btn:hover {
+	    background-color: #2980b9;
+	}
+
+	/* Responsive adjustments */
+	@media (max-width: 480px) {
+	    .appointment-container {
+	        padding: 20px;
+	        margin: 10px;
+	    }
+	}
+	    </style>
+	</head>
+	<body>
+	    <div class="appointment-container">
+	        <h2>Book Your Appointment</h2>
+	        <form id="appointmentForm">
+	            <div class="form-group">
+	                <label for="doctor">Select Doctor:</label>
+	                <select id="doctor" name="doctorId" required>
+	                    <option value="">-- Choose a Doctor --</option>
+	                    <option th:each="doc : ${doctorList}" 
+	                            th:value="${doc.id}" 
+	                            th:text="${doc.name + ' - ' + doc.specialization}">
+	                    </option>
+	                </select>
+	            </div>
+
+	            <div class="form-group">
+	                <label>Appointment Date:</label>
+	                <input type="date" name="date" required>
+	            </div>
+
+	            <div class="form-group">
+	                <label>Appointment Time:</label>
+	                <input type="time" name="time" required>
+	            </div>
+
+	            <div class="form-group">
+	                <label>Blood Group:</label>
+	                <select name="bloodGroup" required>
+	                    <option value="A+">A+</option>
+	                    <option value="B+">B+</option>
+	                    <option value="O+">O+</option>
+	                    <option value="AB+">AB+</option>
+	                </select>
+	            </div>
+
+	            <div class="form-group">
+	                <label>Date of Birth:</label>
+	                <input type="date" name="dob" required>
+	            </div>
+
+	            <div class="form-group">
+	                <label>Current Address:</label>
+	                <textarea name="address" placeholder="Enter your full address" required></textarea>
+	            </div>
+
+	            <div class="form-group">
+	                <label>Reason for Visit:</label>
+	                <textarea name="reason" required></textarea>
+	            </div>
+
+	            <button type="submit" class="submit-btn">Confirm Appointment</button>
+	        </form>
+	    </div>
+
+	    <script src="/js/appointment.js"></script>
+	</body>
+	</html>

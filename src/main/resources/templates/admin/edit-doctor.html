@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Doctor Profile</title>
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fb;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Form Container */
+        .form-container {
+            width: 100%;
+            max-width: 450px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        /* Input Styling */
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0 20px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
+        }
+
+        /* Button Styling */
+        button {
+            width: 100%;
+            background-color: #3498db;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Label styling (Optional, if you add labels later) */
+        label {
+            font-weight: bold;
+            color: #34495e;
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Edit Doctor Profile</h2>
+    <input type="hidden" id="doctorId" th:value="${doctor.id}">
+    
+    <label for="doctorName">Doctor Name</label>
+    <input type="text" id="doctorName" th:value="${doctor.user.name}" required>
+    
+    <label for="specialization">Specialization</label>
+    <input type="text" id="specialization" th:value="${doctor.specialization.name}" required>
+    
+    <label for="experience">Experience (Years)</label>
+    <input type="number" id="experience" th:value="${doctor.experience}" required>
+    
+    <label for="fee">Consultation Fee ($)</label>
+    <input type="number" id="fee" th:value="${doctor.fee}" required>
+    
+    <button type="button" onclick="submitUpdate()">Save Changes</button>
+</div>
+
+<script>
+function submitUpdate() {
+    const id = document.getElementById('doctorId').value;
+    const payload = {
+        name: document.getElementById('doctorName').value,
+        specialization: document.getElementById('specialization').value,
+        experience: Number(document.getElementById('experience').value),
+        fee: Number(document.getElementById('fee').value)
+    };
+
+    fetch(`/api/doctor/update/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    }).then(response => {
+        if (response.ok) {
+            alert("Updated Successfully!");
+            window.location.href = "/api/doctor/admin-doctor";
+        } else {
+            alert("Error updating profile.");
+        }
+    }).catch(err => console.error("Update failed:", err));
+}
+</script>
+
+</body>
+</html>

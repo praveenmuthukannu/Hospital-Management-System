@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Doctor</title>
+    <style>
+        body { font-family: Arial; background: #f4f7fb; }
+
+        .form-container {
+            width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            width: 95%;
+            padding: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+	<div class="form-container">
+	    <h2>Add Doctor profile</h2>
+	    <form id="addDoctorForm">
+	        <input type="text" id="doctorName" placeholder="Doctor Name" required>
+			<input type="email" id="doctorEmail" placeholder="Doctor email" required>
+			<input type="text" id="doctorPhone" placeholder="phone no" required>
+			<input type="text" id="doctorPassword" placeholder="password " required>
+	        <input type="text" id="specialization" placeholder="Specialization" required>
+	        <input type="number" id="experience" placeholder="Experience" required>
+	        <input type="number" id="fee" placeholder="Consultation Fee" required>
+	        <button type="button" onclick="submitDoctor()">Add Doctor</button>
+	    </form>
+		</div>
+
+		<script>
+			function submitDoctor() {
+			    // Collect data and ensure numbers are not sent as strings
+			    const payload = {
+			        name: document.getElementById('doctorName').value,
+			        email: document.getElementById('doctorEmail').value,
+			        phone: document.getElementById('doctorPhone').value,
+			        password: document.getElementById('doctorPassword').value,
+			        specialization: document.getElementById('specialization').value,
+			        experience: Number(document.getElementById('experience').value),
+			        fee: Number(document.getElementById('fee').value)
+			    };
+
+			    fetch('/api/auth/add-doctor', {
+			        method: 'POST',
+			        headers: { 'Content-Type': 'application/json' },
+			        body: JSON.stringify(payload)
+			    })
+			    .then(async response => {
+			        if (response.ok) {
+			            alert("Doctor added successfully!");
+			            window.location.href = "/api/auth/admin-dashboard";
+			        } else {
+			            const errorMsg = await response.text();
+			            alert("Error: " + errorMsg);
+			        }
+			    })
+			    .catch(err => console.error("Network Error:", err));
+			}
+		</script>
+
+</body>
+</html>
