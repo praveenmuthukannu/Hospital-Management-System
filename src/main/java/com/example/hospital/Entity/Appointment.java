@@ -24,7 +24,7 @@ public class Appointment {
     @Enumerated(EnumType.STRING)
     private AppointmentStatus status = AppointmentStatus.scheduled; 
 
-    // This MUST be public to be accessible in the Service
+    
     public enum AppointmentStatus {
         scheduled, completed, cancelled
     }
