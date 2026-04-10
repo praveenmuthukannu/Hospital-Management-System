@@ -6,19 +6,19 @@ A full-stack Spring Boot web application designed to streamline hospital operati
 
 For Patients:
 
-Secure Registration & Login: Role-based access to a personal dashboard.
-Doctor Discovery: View a list of available doctors filtered by specialization (Cardiology, Orthopedics, etc.).
-Appointment Booking: Book appointments with specific doctors for selected dates and times.
+Secure Registration & Login: Role-based access to a personal dashboard.                                                                 
+Doctor Discovery: View a list of available doctors filtered by specialization (Cardiology, Orthopedics, etc.).                           
+Appointment Booking: Book appointments with specific doctors for selected dates and times.                                               
 History Tracking: View personal appointment history and status.
 
 For Doctors:
 
-Schedule Management: View a dedicated list of all upcoming patient appointments.
+Schedule Management: View a dedicated list of all upcoming patient appointments.                                                                
 Status Updates: Update or manage appointment details.
 
 For Administrators:
 
-System Oversight: View all appointments across the entire hospital.
+System Oversight: View all appointments across the entire hospital.                                                                        
 Profile Management: Add, update, or remove doctor profiles and specializations.
 
 
@@ -38,17 +38,17 @@ Build Tool: Maven
 
 
 
- Database Architecture:
+ Database Architecture:                                                                                                                 
 The system utilizes a relational MySQL database with the following core entities:
 
-users: Central table for credentials and roles (Admin/Doctor/Patient).
-doctors: Linked to users, containing specialization, experience, and fees.
-patients: Linked to users, containing DOB and medical address.
-specializations: A catalog of medical departments.
-appointments: The transactional table linking patients and doctors with dates and reasons.
+users: Central table for credentials and roles (Admin/Doctor/Patient).                                                                  
+doctors: Linked to users, containing specialization, experience, and fees.                                                               
+patients: Linked to users, containing DOB and medical address.                                                                          
+specializations: A catalog of medical departments.                                                                                      
+appointments: The transactional table linking patients and doctors with dates and reasons.                                               
 
 
-Database Configuration:
+Database Configuration:                                                                                                                   
 Update src/main/resources/application.properties with your MySQL credentials:
 
 Properties
