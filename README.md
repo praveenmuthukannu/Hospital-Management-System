@@ -63,9 +63,9 @@ Access the application at http://localhost:8080
 
 
 
-hospital-management-system
-├── src/main/java
-│   └── com.example.hospital
+hospital-management-system                                                                                                                                                            
+├── src/main/java                                                                                                                                                                 
+│   └── com.example.hospital                                                                                                                                                         
 │       ├── hospitalController      # REST & MVC Controllers (Auth, Appointment, Doctor) 
 │       ├── hospitalDto             # Data Transfer Objects (Requests & Responses)                                                                                             
 │       ├── hospitalEntity          # JPA Entities (User, Doctor, Patient, Appointment)                                                                                             
