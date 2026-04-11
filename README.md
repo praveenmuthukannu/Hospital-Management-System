@@ -68,17 +68,17 @@ hospital-management-system
 │   └── com.example.hospital                                                                                                                                                         
 │       ├── hospitalController      # REST & MVC Controllers (Auth, Appointment, Doctor) 
 │       ├── hospitalDto             # Data Transfer Objects (Requests & Responses)                                                                                             
-│       ├── hospitalEntity          # JPA Entities (User, Doctor, Patient, Appointment)                                                                                             
-│       ├── hospitalRepository      # Spring Data JPA Repositories                                                                                                           
-│       └── hospitalService         # Business Logic Layer (Auth, Patient, Doctor Services)                                                                                   
-├── src/main/resources                                                                                                                                                
-│   ├── static
+│       ├── hospitalEntity          # JPA Entities (User, Doctor, Patient, Appointment)                                                                                              
+│       ├── hospitalRepository      # Spring Data JPA Repositories                                                                                                            
+│       └── hospitalService         # Business Logic Layer (Auth, Patient, Doctor Services)                                                                                    
+├── src/main/resources                                                                                                                                                 
+│   ├── static                                                                                                                                                                         
 │   │   ├── images                  # Backgrounds and assets                                                                                                                   
 │   │   └── js                      # Frontend logic (appointment.js, login.js, register.js)                                                                                
-│   ├── templates                   # Thymeleaf HTML Views                                                                                                                  
-│   │   ├── admin                   # Admin dashboard and doctor management                                                                                               
-│   │   ├── doctor                  # Doctor appointments and schedule                                                                                                    
-│   │   ├── home                    # Landing, Login, and Registration pages                                                                                    
-│   │   └── patient                 # Appointment booking and history                                                                                                                
-│   └── application.properties       # Database and Server configurations                                                                                                   
-└── pom.xml                         # Maven Dependencies 
+│   ├── templates                   # Thymeleaf HTML Views                                                                                                                         
+│   │   ├── admin                   # Admin dashboard and doctor management                                                                                                
+│   │   ├── doctor                  # Doctor appointments and schedule                                                                                                     
+│   │   ├── home                    # Landing, Login, and Registration pages                                                                                     
+│   │   └── patient                 # Appointment booking and history                                                                                                                 
+│   └── application.properties       # Database and Server configurations                                                                                                    
+└── pom.xml                         # Maven Dependencies                                        
