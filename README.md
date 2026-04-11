@@ -80,7 +80,8 @@ src/main/java/com/example/hospital/
 │   └── AppointmentRepository.java    
 └── hospitalDto/               
     ├── UserDto.java           
-    └── AppointmentDto.java    
+    └── AppointmentDto.java 
+    └──LoginResponse.java
 
 src/main/resources/  
 ├── static/                     
