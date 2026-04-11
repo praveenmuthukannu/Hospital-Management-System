@@ -33,8 +33,8 @@ public class AuthService {
       return false;
     }
     
-    public void  register(User user) {
-    	userRepository.save(user);
+    public User  register(User user) {
+    	return userRepository.save(user);
     }
 
     public User login(String email, String password) {
@@ -47,13 +47,13 @@ public class AuthService {
     }
     
     @Transactional
-    public void registerDoctorProfile(DoctorRegistrationRequest req) {
+    public User registerDoctorProfile(DoctorRegistrationRequest req) {
         // 1. Create and save the User (for login credentials)
         User user = new User();
         user.setName(req.getName());
         user.setEmail(req.getEmail());
         user.setPhone(req.getPhone());
-        user.setPassword(req.getPassword()); // In a real app, use password encoder
+        user.setPassword(req.getPassword()); 
         user.setRole(User.UserRole.doctor);
         user = userRepository.save(user);
 
@@ -72,7 +72,9 @@ public class AuthService {
         doctor.setExperience(req.getExperience() != null ? req.getExperience() : 0);
         doctor.setFee(req.getFee() != null ? req.getFee() : 0L);
         
-        doctorRepository.save(doctor);
+          doctorRepository.save(doctor);
+          
+          return user;
     }
     
     

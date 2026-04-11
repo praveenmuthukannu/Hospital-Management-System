@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.hospital.Entity.*;
 import com.example.hospital.hospitalDto.DoctorRegistrationRequest;
 import com.example.hospital.hospitalService.AuthService;
+import com.example.hospital.hospitalDto.*;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -59,47 +60,58 @@ public class AuthController {
 		return "/admin/admin-dashboard";
 	}
 
+
+	
 	@PostMapping("/register")
-	public ResponseEntity<String> register(@RequestBody User user) {
-		if (authService.Checkregister(user)) {
+	public ResponseEntity<?> register(@RequestBody User user) {
+	    if (authService.Checkregister(user)) {
+	        return ResponseEntity.badRequest().body("Email already exists");
+	    }
 
-			return ResponseEntity.badRequest().body("Email already exists");
-		}
-		user.setRole(User.UserRole.patient);
-		authService.register(user);
+	    user.setRole(User.UserRole.patient);
+	    
+	   
+	    User savedUser = authService.register(user);
 
-		return ResponseEntity.ok("Success");
+	    RegistrationResponse response = new RegistrationResponse(
+	        "Registration Successful", 
+	        savedUser
+	    );
+
+	    return ResponseEntity.ok(response);
 	}
 
+
+	
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody Map<String, String> loginData, HttpSession session) {
-		String email = loginData.get("email");
-		String password = loginData.get("password");
-		String selectedRole = loginData.get("role");
+	public ResponseEntity<?> login(@RequestBody Map<String, String> loginData, HttpSession session) {
+	    String email = loginData.get("email");
+	    String password = loginData.get("password");
+	    String selectedRole = loginData.get("role");
 
-		User validUser = authService.login(email, password);
+	    User validUser = authService.login(email, password);
 
-		if (validUser != null) {
+	    if (validUser != null) {
+	        String dbRole = validUser.getRole().name().toLowerCase();
 
-			String dbRole = validUser.getRole().name().toLowerCase();
+	        if (!dbRole.equals(selectedRole.toLowerCase())) {
+	            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+	                    .body("Access Denied: You cannot login as " + selectedRole + " with this account.");
+	        }
 
-			if (!dbRole.equals(selectedRole.toLowerCase())) {
-				return ResponseEntity.status(HttpStatus.FORBIDDEN)
-						.body("Access Denied: You cannot login as " + selectedRole + " with this account.");
-			}
+	        // Set Session Attributes (for your Thymeleaf views)
+	        session.setAttribute("userName", validUser.getName());
+	        session.setAttribute("userEmail", validUser.getEmail());
+	        session.setAttribute("userId", validUser.getId());
+	        session.setAttribute("userRole", dbRole);
 
-			
-			session.setAttribute("userName", validUser.getName());
-			session.setAttribute("userEmail", validUser.getEmail());
-			session.setAttribute("userId", validUser.getId());
-			session.setAttribute("userRole", dbRole);
-
-			String redirectUrl = "/api/auth/" + dbRole + "-dashboard";
-
-			return ResponseEntity.ok(redirectUrl);
-		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-		}
+	        String redirectUrl = "/api/auth/" + dbRole + "-dashboard";
+	        LoginResponse response = new LoginResponse(redirectUrl, "Login Successful", validUser);
+	        
+	        return ResponseEntity.ok(response); 
+	    } else {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+	    }
 	}
 
 	@PostMapping("/add-doctor")
@@ -112,6 +124,28 @@ public class AuthController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration failed: " + e.getMessage());
 		}
+	}
+	
+	
+	
+	//api test
+	@PostMapping("/add-doctor/data")
+	@ResponseBody
+	public ResponseEntity<?> registerDoctorequest(@RequestBody DoctorRegistrationRequest request) {
+	    try {
+	       
+	        User savedDoctor = authService.registerDoctorProfile(request);	        
+	       
+	        return ResponseEntity.ok(Map.of(
+	            "message", "Doctor registered successfully!",
+	            "doctorName", savedDoctor.getName(),
+	            "email", savedDoctor.getEmail(),
+	            "role", savedDoctor.getRole()
+	        ));
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                             .body("Registration failed: " + e.getMessage());
+	    }
 	}
 
 	

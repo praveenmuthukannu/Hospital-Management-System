@@ -15,17 +15,34 @@ function loginUser() {
 		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify(loginData)
 	})
+		
+		
 		.then(async res => {
-			if (res.ok) {
-			
-				// 'url' will be "/patient/dashboard", "/doctor/dashboard", etc.
-				
-				const url = await res.text();
-				
-				window.location.href = url;
-			} else {
-				const error = await res.text();
-				document.getElementById("error-message").innerText = error;
-			}
-		});
+
+		if (res.ok) {
+
+		// 1. CHANGE THIS: Use .json() instead of .text()
+
+		const data = await res.json();
+
+
+		// 2. CHANGE THIS: Access the redirectUrl property from the object
+
+		
+		window.location.href = window.location.origin + data.redirectUrl;
+
+		} else {
+
+		const error = await res.text();
+
+		document.getElementById("error-message").innerText = error;
+
+		}
+
+		})
+
+		.catch(err => {
+
+		console.error("Login failed:", err);
+})
 }

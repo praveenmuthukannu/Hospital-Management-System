@@ -54,7 +54,7 @@ public class AppointmentService {
     }
     
     @Transactional 
-    public void createAppointment(AppointmentRequest request, Long userId) {
+    public Appointment createAppointment(AppointmentRequest request, Long userId) {
        
         Patient patient = patientRepository.findByUserId(userId).orElse(null);
         if (patient == null) {
@@ -90,7 +90,7 @@ public class AppointmentService {
         appointment.setReason(request.getReason());
         appointment.setStatus(Appointment.AppointmentStatus.scheduled);
 
-        appointmentRepository.save(appointment);
+      return  appointmentRepository.save(appointment);
     }
     
     public void deleteAppointment(Long id) {
@@ -101,5 +101,17 @@ public class AppointmentService {
         }
     }
 
+    
+    public boolean cancelAppointment(Long appointmentId, Long userId) {
+        // 1. Find the appointment
+        return appointmentRepository.findById(appointmentId).map(appointment -> {
+            // 2. Security Check: Does this appointment belong to the logged-in user?
+        	if (appointment.getPatient().getUser().getId().equals(userId)) { 
+        	    appointmentRepository.delete(appointment);
+        	    return true;
+        	}
+            return false; // Not the owner
+        }).orElse(false); // Appointment doesn't exist
+    }
 	
 }

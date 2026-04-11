@@ -18,14 +18,19 @@ document.getElementById('appointmentForm').addEventListener('submit', function(e
 		credentials: 'include',
         body: JSON.stringify(data)
     })
-    .then(response => {
-        if (response.ok) {
-            alert("Appointment Booked Successfully!");
-            window.location.href = "/api/auth/patient-dashboard";
-        } else {
-            alert("Error booking appointment. Please try again.");
-        }
-    })
+ 
+ 
+  
+  .then(async response => {
+      if (response.ok) {
+          const data = await response.json(); 
+          alert(data.message); 
+          window.location.href = "/api/auth/patient-dashboard";
+      } else {
+          const errorText = await response.text();
+          alert("Error: " + errorText);
+      }
+  })
     .catch(error => {
         console.error('Error:', error);
     });

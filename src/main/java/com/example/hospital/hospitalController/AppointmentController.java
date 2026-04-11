@@ -2,6 +2,7 @@ package com.example.hospital.hospitalController;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,9 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-
+import com.example.hospital.Entity.Appointment;
 import com.example.hospital.hospitalDto.AdminAppointmentDto;
 import com.example.hospital.hospitalDto.AppointmentRequest;
+import com.example.hospital.hospitalDto.AppointmentResponse;
 import com.example.hospital.hospitalDto.DoctorDTO;
 import com.example.hospital.hospitalDto.PatientAppointmentDto;
 import com.example.hospital.hospitalRepository.AppointmentRepository;
@@ -36,35 +38,46 @@ public class AppointmentController {
     private AppointmentRepository appointmentRepository;
 
 
+
+    
     @PostMapping("/book-appointment")
     @ResponseBody
-    public ResponseEntity<String> bookAppointment(@RequestBody AppointmentRequest request, HttpSession session) {
+    public ResponseEntity<?> bookAppointment(@RequestBody AppointmentRequest request, HttpSession session) {
         
-        Long userId = (Long)session.getAttribute("userId");
+        Long userId = (Long) session.getAttribute("userId");
         
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session expired. Please login.");
         }
 
         try {
-            appointmentService.createAppointment(request, userId);
-            return ResponseEntity.ok("Appointment confirmed successfully!");
+            Appointment savedAppt = appointmentService.createAppointment(request, userId);
+            
+           
+            AppointmentResponse response = new AppointmentResponse(
+                "Appointment confirmed successfully!",
+                savedAppt.getId(),
+                savedAppt.getDoctor().getUser().getName(),
+                savedAppt.getAppt_date().toString()
+            );
+            
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
     
+    
+    
     @GetMapping("/book-appointment")
 	 public String showAppointmentForm(Model model) {
 	     
 	     List<DoctorDTO> doctors = doctorRepository.findAllDoctorDetails();
-	     
-	     
 	     model.addAttribute("doctorList", doctors);
-	     
-	     
 	     return "patient/book-appointment";
 	 }
+    
+    
     
     @GetMapping("/my-appointments")
     public String showAppointmentList(Model model, HttpSession session) {
@@ -73,13 +86,30 @@ public class AppointmentController {
         if (userId == null) {
             return "redirect:/api/auth/login";
         }
-
-        // Use the repository method we just created
         List<PatientAppointmentDto> appointments = appointmentRepository.findAppointmentsByUserId(userId);
         
         model.addAttribute("listAppointment", appointments);
-        return "patient/my-appointments"; // Ensure this matches your HTML file name
+        return "patient/my-appointments"; 
     }
+    
+    
+    
+    //api test
+    @GetMapping("/my-appointments/data")
+    @ResponseBody
+    public ResponseEntity<?> getAppointmentHistoryJson(HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session expired. Please login.");
+        }
+
+        List<PatientAppointmentDto> appointments = appointmentRepository.findAppointmentsByUserId(userId);
+        return ResponseEntity.ok(appointments);
+    }
+    
+    
+    
     
     @PostMapping("/update-status")
     public String updateAppointmentStatus(@RequestParam("id") Long id, 
@@ -87,6 +117,7 @@ public class AppointmentController {
         appointmentService.updateStatus(id, status);
         return "redirect:/api/doctor/my-appointments";
     }
+    
     
     @DeleteMapping("{id}")
     public ResponseEntity<String> cancelAppointment(@PathVariable Long id) {
@@ -97,6 +128,33 @@ public class AppointmentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Appointment not found.");
         }
     }
+    
+    
+    
+    //api test
+    @DeleteMapping("/cancel/{id}")
+    @ResponseBody
+    public ResponseEntity<?> cancel(@PathVariable Long id, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session expired.");
+        }
+
+        boolean isCancelled = appointmentService.cancelAppointment(id, userId);
+
+        if (isCancelled) {
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Appointment cancelled successfully",
+                "id", id
+            ));
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                 .body("Error: You are not authorized to cancel this appointment.");
+        }
+    }
+    
     
     @GetMapping("/admin/appointments")
     public String showAllAppointments(Model model) {

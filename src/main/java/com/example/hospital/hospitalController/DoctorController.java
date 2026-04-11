@@ -47,6 +47,18 @@ public class DoctorController {
 	     
 	     return "patient/view-doctors";
 	 }
+	 
+	 
+	 
+	 @GetMapping("/doctors/data")
+	 @ResponseBody 
+	 public ResponseEntity<List<DoctorDTO>> getDoctorsData() {
+	     
+	     List<DoctorDTO> doctors = doctorRepository.findAllDoctorDetails();
+	     return ResponseEntity.ok(doctors);
+	 }
+	 
+	 
 
 	 @GetMapping("/my-appointments")
 	 public String showDoctorAppointments(Model model, HttpSession session) {
